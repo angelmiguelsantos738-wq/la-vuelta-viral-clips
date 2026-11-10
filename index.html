@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Vuelta Viral Clips</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101010;
+color:white;
+}
+header{
+background:#e50914;
+padding:25px 15px;
+text-align:center;
+}
+header h1{margin:0;font-size:27px}
+header p{margin:8px 0 0}
+main{
+max-width:650px;
+margin:30px auto;
+padding:20px;
+}
+.card{
+background:#202020;
+padding:22px;
+border-radius:12px;
+}
+h2{color:#ff3030}
+input,button{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:0;
+border-radius:7px;
+font-size:16px;
+}
+input{background:white;color:black}
+button{
+background:#e50914;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{background:#b9000b}
+#resultado{
+margin-top:20px;
+overflow-wrap:anywhere;
+}
+footer{
+text-align:center;
+padding:25px;
+color:#aaa;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>LA VUELTA VIRAL CLIPS</h1>
+<p>¡Los mejores cortes y momentos virales!</p>
+</header>
+
+<main>
+<div class="card">
+<h2>Crear tu clip</h2>
+<p>Pega el enlace del vídeo de YouTube:</p>
+
+<input id="enlace" type="url"
+placeholder="Pega aquí el enlace del vídeo">
+
+<input id="inicio" type="number"
+placeholder="Segundo donde inicia el corte">
+
+<input id="fin" type="number"
+placeholder="Segundo donde termina el corte">
+
+<button onclick="crearClip()">CREAR MI CLIP</button>
+
+<div id="resultado"></div>
+</div>
+</main>
+
+<footer>
+La Vuelta Viral Clips © 2026
+</footer>
+
+<script>
+function crearClip(){
+const enlace=document.getElementById("enlace").value.trim();
+const inicio=parseInt(document.getElementById("inicio").value)||0;
+const fin=parseInt(document.getElementById("fin").value)||0;
+const resultado=document.getElementById("resultado");
+
+let videoId="";
+
+try{
+const url=new URL(enlace);
+if(url.hostname.includes("youtu.be")){
+videoId=url.pathname.substring(1);
+}else{
+videoId=url.searchParams.get("v")||"";
+}
+}catch(e){}
+
+if(!videoId){
+resultado.innerHTML="Escribe un enlace válido de YouTube.";
+return;
+}
+
+if(fin<=inicio){
+resultado.innerHTML="El segundo final debe ser mayor que el inicial.";
+return;
+}
+
+const link="https://www.youtube.com/watch?v="+videoId+"&t="+inicio+"s";
+
+resultado.innerHTML=`
+<h3>Tu enlace está preparado</h3>
+<p>Inicio: ${inicio}s | Final: ${fin}s</p>
+<a href="${link}" target="_blank" style="color:#ff5555">
+Abrir vídeo desde el inicio del corte
+</a>
+<button onclick="navigator.clipboard.writeText('${link}')">
+COPIAR ENLACE
+</button>
+<p>Este enlace abre el vídeo en YouTube; no descarga ni recorta el archivo.</p>
+`;
+}
+</script>
+
+</body>
+</html>
